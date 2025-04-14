@@ -6,6 +6,7 @@ const ORIGIN = process.env.ORIGIN;
 const app = express();
 const authRoutes = require("./routes/auth");
 const apiRoutes = require("./routes/api");
+const reportRoutes = require("./routes/report");
 require("dotenv").config();
 
 app.use(
@@ -33,3 +34,6 @@ app.use("/auth", authRoutes);
 
 // Роуты для api
 app.use("/api", apiRoutes);
+
+// Роуты для api
+app.use("/report", reportRoutes);

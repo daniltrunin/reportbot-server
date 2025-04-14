@@ -5,6 +5,6 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true },
     roles: { type: Array, required: true },
     teams: { type: Array, required: true }
-})
+}, { collection: "users" })
 
 module.exports = mongoose.model("User", UserSchema)

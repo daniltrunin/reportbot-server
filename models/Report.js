@@ -16,7 +16,8 @@ const ReportSchema = new mongoose.Schema({
     ],
     date: { type: Date, required: true },
     dateString: { type: String },
-    tags: { type: Array, required: true }
-})
+    tags: { type: Array, required: true },
+    teams: { type: Array, required: true }
+}, { collection: "buyers_reports" })
 
 module.exports = mongoose.model("Report", ReportSchema)
