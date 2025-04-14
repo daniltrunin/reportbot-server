@@ -1,18 +1,20 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const PORT = process.env.PORT ?? 5000;
+const PORT = process.env.PORT ?? 3000;
+const ORIGIN = process.env.ORIGIN;
 const app = express();
-// const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth");
 require("dotenv").config();
 
 app.use(
     cors({
-        origin: "http://localhost:5173", // Разрешить запросы только с этого домена
+        origin: `${ORIGIN}`, // Разрешить запросы только с этого домена
         methods: ["GET", "POST", "PUT", "DELETE"], // Разрешенные HTTP-методы
         allowedHeaders: ["Content-Type", "Authorization"], // Разрешенные заголовки
     })
 );
+
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI)
@@ -23,9 +25,7 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-app.listen(PORT, () => {
-    console.log("server is running...")
-})
+app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
 // Роуты для авторизации
 app.use("/auth", authRoutes);
