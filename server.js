@@ -5,6 +5,7 @@ const PORT = process.env.PORT ?? 3000;
 const ORIGIN = process.env.ORIGIN;
 const app = express();
 const authRoutes = require("./routes/auth");
+const apiRoutes = require("./routes/api");
 require("dotenv").config();
 
 app.use(
@@ -29,3 +30,6 @@ app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
 // Роуты для авторизации
 app.use("/auth", authRoutes);
+
+// Роуты для api
+app.use("/api", apiRoutes);
