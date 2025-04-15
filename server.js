@@ -7,6 +7,7 @@ const app = express();
 const authRoutes = require("./routes/auth");
 const apiRoutes = require("./routes/api");
 const reportRoutes = require("./routes/report");
+const tagsRoutes = require("./routes/tag");
 require("dotenv").config();
 
 app.use(
@@ -37,3 +38,6 @@ app.use("/api", apiRoutes);
 
 // Роуты для api
 app.use("/report", reportRoutes);
+
+// Роуты для tags
+app.use("/tags", tagsRoutes);
