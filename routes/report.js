@@ -27,6 +27,7 @@ router.post("/setreport", async (req, res) => {
             media,
             date: now,
             dateString: now.toLocaleString("ru-RU"),
+            dateRU: now.toLocaleDateString("ru-RU"),
             tags,
             teams
         })
@@ -36,6 +37,26 @@ router.post("/setreport", async (req, res) => {
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: "Error setting report" })
+    }
+})
+
+// receive all reports by the team by current day // получить все отчёта команды за сегодняшний день
+router.post("/receiveallreportsbyteamoncurrentday", async (req, res) => {
+    const { team } = req.body;
+    try {
+        const now = new Date();
+        const reports = await Report.find({
+            dateRU: now.toLocaleDateString("ru-RU")
+        })
+            .populate({
+                path: "user_id",
+                match: { teams: team }
+            })
+        const filteredReports = reports.filter(r => r.user_id !== null);
+        res.status(201).json({ reports: filteredReports })
+    } catch (e) {
+        console.error(e)
+        res.status(500).json({ error: "Error getting reports" })
     }
 })
 

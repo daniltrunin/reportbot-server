@@ -16,6 +16,7 @@ const ReportSchema = new mongoose.Schema({
     ],
     date: { type: Date, required: true },
     dateString: { type: String },
+    dateRU: { type: String, required: true },
     tags: { type: Array, required: true },
     teams: { type: Array, required: true }
 }, { collection: "buyers_reports" })
