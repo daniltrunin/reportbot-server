@@ -46,4 +46,15 @@ router.post("/getbuyerteams", async (req, res) => {
     }
 });
 
+// получение всех менеджеров
+router.get("/getallmanagers", async (req, res) => {
+    try {
+        const managers = await User.findOne({ roles: "manager" })
+        res.status(200).json({ message: managers })
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error getting managers" })
+    }
+})
+
 module.exports = router;
