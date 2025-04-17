@@ -60,4 +60,19 @@ router.post("/receiveallreportsbyteamoncurrentday", async (req, res) => {
     }
 })
 
+// получить отчёты вообще всех баероа за сегодняшний день
+router.get("/receiveallreportsbycurrentday", async (req, res) => {
+    try {
+        const now = new Date();
+        const reports = await Report.find({
+            dateRU: now.toLocaleDateString("ru-RU")
+        })
+            .populate("user_id");
+        res.status(200).json({ reports: reports })
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error getting reports" })
+    }
+})
+
 module.exports = router;
