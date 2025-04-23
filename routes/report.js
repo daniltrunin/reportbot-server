@@ -40,6 +40,21 @@ router.post("/setreport", async (req, res) => {
     }
 })
 
+// получить отчёты вообще все отчёты баеров за сегодняшний день
+router.get("/receiveallreportsbycurrentday", async (req, res) => {
+    try {
+        const now = new Date();
+        const reports = await Report.find({
+            dateRU: now.toLocaleDateString("ru-RU")
+        })
+            .populate("user_id");
+        res.status(200).json({ reports: reports })
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error getting reports" })
+    }
+})
+
 // receive all reports by the team by current day // получить все отчёта команды за сегодняшний день
 router.post("/receiveallreportsbyteamoncurrentday", async (req, res) => {
     const { team } = req.body;
@@ -60,15 +75,55 @@ router.post("/receiveallreportsbyteamoncurrentday", async (req, res) => {
     }
 })
 
-// получить отчёты вообще всех баероа за сегодняшний день
-router.get("/receiveallreportsbycurrentday", async (req, res) => {
+// получи все отчёты, у которых указаны 
+// переданная команда
+// переданный тег
+// переданный байер
+router.post("/getbuyersbytagsandbuyername", async (req, res) => {
+    const { tag, team, buyer } = req.body;
+
+    if (!tag || !team || !buyer) {
+        return res.status(400).json({ error: "Tag name, team name and buyer name are required" });
+    }
+
     try {
-        const now = new Date();
         const reports = await Report.find({
-            dateRU: now.toLocaleDateString("ru-RU")
+            tags: tag,
+            teams: team
+        }).populate({
+            path: "user_id",
+            match: { username: buyer }
+        });
+
+        const filteredReports = reports.filter(report => report.user_id !== null);
+
+        res.status(201).json({ message: filteredReports });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Error getting buyers list" });
+    }
+});
+
+//вернуть все отчёты по дате, байеру, тегу и команде
+router.post("/getreportsbydatetagsbuyerteam", async (req, res) => {
+    const { date, tag, buyer, team } = req.body;
+
+    if (!date || !tag || !buyer || !team) {
+        return res.status(400).json({ error: "Date, tag name, buyer name, team name are required" });
+    }
+
+    try {
+        const reports = await Report.find({
+            dateRU: date,
+            tags: tag,
+            teams: team,
+        }).populate({
+            path: "user_id",
+            match: { username: buyer }
         })
-            .populate("user_id");
-        res.status(200).json({ reports: reports })
+        const filteredReports = reports.filter(r => r.user_id);
+
+        res.status(201).json({ message: filteredReports })
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: "Error getting reports" })
